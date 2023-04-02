@@ -3,9 +3,5 @@ import ChatContainer from '../components/ChatContainer.vue'
 </script>
 
 <template>
-  <main>
-    <div>
-      <ChatContainer />
-    </div>
-  </main>
+  <ChatContainer />
 </template>
