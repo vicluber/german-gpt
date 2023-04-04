@@ -1,5 +1,6 @@
 <template>
-    <div class="chat">
+    <div class="chat h-100" style="display: flex;
+        flex-direction: column;">
         <div class="chat-header clearfix">
             <div class="row">
                 <div class="col-lg-6">
@@ -11,15 +12,9 @@
                     <small>Last seen: now</small>
                 </div>
                 </div>
-                <div class="col-lg-6 hidden-sm text-right">
-                <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-                <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
-                <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
-                <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
-                </div>
             </div>
         </div>
-        <div class="chat-history">
+        <div class="chat-history" style="flex: 1;" @change="onChange()" ref="chatHistory">
             <ul class="m-b-0">
                 <ChatLoop
                     :messages="this.messages"
@@ -54,69 +49,53 @@ export default {
             message: "",
             messages: [],
             openaiMessages: [],
-            response: [],
-            corrected: "",
-            alternative: "",
-            analisys: "",
             answer: "",
             openai: new OpenAIApi(new Configuration({apiKey: import.meta.env.VITE_SOME_KEY}))
         };
     },
-    mounted() {
+    watch: {
+    // whenever question changes, this function will run
+        messages(newValue, oldValue) {
+            console.log('ñlaskjfdñas')
+            this.getAnswer()
+        }
     },
     methods: {
+        async getAnswer() {
+            console.log('asfdasaf')
+            try {
+                const res = await fetch('https://yesno.wtf/api')
+                this.answer = (await res.json()).answer
+            } catch (error) {
+                this.answer = 'Error! Could not reach the API. ' + error
+            }
+        },
         async sendMessage() {
             this.time = new Date().toLocaleTimeString();
             this.message = this.inputMessage;
             this.inputMessage = "";
             this.messages.push({ role: "user", content: this.message, time: this.time });
+            this.askForAnswer()
+        },
+        askForAnswer() {
             this.openaiMessages.push({ role: "user", content: this.message });
             this.openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
-                //n: 2,
                 messages: this.openaiMessages
             }).then(res => {
                 this.answer = res.data.choices[0].message.content;
                 this.openaiMessages.push({ role: "assistant", content: this.answer });
-                this.askForAlternative();
+                this.messages.push({ role: "assistant", content: this.answer, time: this.time });
             });
         },
-        askForAlternative() {
-            this.openaiMessages.push({ role: "user", content: "De que otra forma se puede decir esto?: " + this.message })
-            this.openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                //n: 2,
-                messages: this.openaiMessages
-            }).then(res => {
-                this.alternative = res.data.choices[0].message.content;
-                this.openaiMessages.push({ role: "assistant", content: this.alternative });
-                this.askForCorrection()
+        scrollChatHistoryToBottom() {
+            Vue.nextTick(() => {
+                const chatHistory = this.$refs.chatHistory;
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+                console.log(chatHistoryDiv)
             });
+            
         },
-        askForCorrection(){
-            this.openaiMessages.push({ role: "user", content: "Como se escribe esto de forma correcta?: " + this.message })
-            this.openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                //n: 2,
-                messages: this.openaiMessages
-            }).then(res => {
-                this.corrected = res.data.choices[0].message.content;
-                this.openaiMessages.push({ role: "assistant", content: this.corrected });
-                this.askForGramarAnalisys()
-            });
-        },
-        askForGramarAnalisys(){
-            this.openaiMessages.push({ role: "user", content: "Traduce esto al español: " + this.answer })
-            this.openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                //n: 2,
-                messages: this.openaiMessages
-            }).then(res => {
-                this.analisys = res.data.choices[0].message.content;
-                this.messages.push({ role: "assistant", content: this.answer, time: this.time, translated: this.analisys, alternative: this.alternative, correction: this.corrected });
-                this.openaiMessages.push({ role: "assistant", content: this.analisys });
-            });
-        }
     },
     components: { ChatLoop }
 };

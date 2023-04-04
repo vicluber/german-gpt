@@ -1,5 +1,5 @@
 <template>
-  <div class="card chat-app">
+  <div class="card chat-app h-100">
     <PeopleListContainer />
     <Chat />
   </div>
