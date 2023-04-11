@@ -34,7 +34,9 @@ export default {
     props: {
         message: String,
         role: String,
-        time: String
+        time: String,
+        yourLanguage: String,
+        theLanguage: String
     },
     data() {
         return {
@@ -59,7 +61,7 @@ export default {
         }
     },
     created() {
-        this.openaiMessages.push({ role: "user", content: "De que otra forma se puede decir esto en alemán?: " + this.message })
+        this.openaiMessages.push({ role: "user", content: "De que otra forma se puede decir esto en "+this.theLanguage+"?: " + this.message })
         this.openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: this.openaiMessages
@@ -79,7 +81,7 @@ export default {
         
 
         if(this.role == 'assistant')
-        this.openaiMessages.push({ role: "user", content: "Traduce esto al español: " + this.message })
+        this.openaiMessages.push({ role: "user", content: "Traduce esto a "+this.yourLanguage+": " + this.message })
         this.openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: this.openaiMessages

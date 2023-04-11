@@ -4,6 +4,8 @@
             :message="item.content"
             :time="item.time"
             :role="item.role"
+            :theLanguage="theLanguage"
+            :yourLanguage="yourLanguage"
         />
     </li>
 </template>
@@ -11,7 +13,11 @@
 <script>
 import ChatItem from './ChatItem.vue';
 export default {
-    props: ["messages"],
+    props: {
+        messages: Array,
+        theLanguage: String,
+        yourLanguage: String
+    },
     components: { ChatItem }
 };
 </script>

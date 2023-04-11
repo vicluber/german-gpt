@@ -1,6 +1,5 @@
 <template>
-    <div class="chat h-100" style="display: flex;
-        flex-direction: column;">
+    <div class="chat h-100" style="display: flex; flex-direction: column;">
         <div class="chat-header clearfix">
             <div class="row">
                 <div class="col-lg-6">
@@ -8,7 +7,7 @@
                 <img src="0.jpg" alt="avatar">
                 </a>
                 <div class="chat-about">
-                    <h6 class="m-b-0">Victor Willhuber</h6>
+                    <h6 class="m-b-0">{{ name }}</h6>
                     <small>Last seen: now</small>
                 </div>
                 </div>
@@ -17,7 +16,7 @@
         <div class="chat-history" style="flex: 1;" @change="onChange()" ref="chatHistory">
             <ul class="m-b-0">
                 <ChatLoop
-                    :messages="this.messages"
+                    :messages="this.messages" :theLanguage="theLanguage" :yourLanguage="yourLanguage"
                 />
             </ul>
         </div>
@@ -42,6 +41,11 @@
 import { Configuration, OpenAIApi } from "openai";
 import ChatLoop from "./ChatLoop.vue";
 export default {
+    props: {
+        theLanguage: String,
+        yourLanguage: String,
+        name: String
+    },
     data() {
         return {
             time: "",
@@ -53,23 +57,7 @@ export default {
             openai: new OpenAIApi(new Configuration({apiKey: import.meta.env.VITE_SOME_KEY}))
         };
     },
-    watch: {
-    // whenever question changes, this function will run
-        messages(newValue, oldValue) {
-            console.log('ñlaskjfdñas')
-            this.getAnswer()
-        }
-    },
     methods: {
-        async getAnswer() {
-            console.log('asfdasaf')
-            try {
-                const res = await fetch('https://yesno.wtf/api')
-                this.answer = (await res.json()).answer
-            } catch (error) {
-                this.answer = 'Error! Could not reach the API. ' + error
-            }
-        },
         async sendMessage() {
             this.time = new Date().toLocaleTimeString();
             this.message = this.inputMessage;
@@ -87,14 +75,6 @@ export default {
                 this.openaiMessages.push({ role: "assistant", content: this.answer });
                 this.messages.push({ role: "assistant", content: this.answer, time: this.time });
             });
-        },
-        scrollChatHistoryToBottom() {
-            Vue.nextTick(() => {
-                const chatHistory = this.$refs.chatHistory;
-                chatHistory.scrollTop = chatHistory.scrollHeight;
-                console.log(chatHistoryDiv)
-            });
-            
         },
     },
     components: { ChatLoop }
