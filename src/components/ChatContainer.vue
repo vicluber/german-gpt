@@ -5,65 +5,103 @@
         <div class="modal-header">
         </div>
         <div class="modal-body">
-          <label for="language">THe language</label>
-          <select class="form-control" v-model="theLanguage">
+          <label for="language">I want to improve my:</label>
+          <select class="form-control" v-model="language">
             <option value="alemán">German</option>
             <option value="español">Spanish</option>
             <option value="inglés">English</option>
             <option value="italiano">Italian</option>
             <option value="portugés">Portugues</option>
           </select>
-          <small id="emailHelp" class="form-text text-muted">The language you want to use.</small>
-
-          <label for="language">Your language</label>
-          <select class="form-control" v-model="yourLanguage">
+          <small id="emailHelp" class="form-text text-muted">Language be used.</small>
+          <br>
+          <label for="language">I can easily speak:</label>
+          <select class="form-control" v-model="motherThonge">
             <option value="alemán">German</option>
             <option value="español">Spanish</option>
             <option value="inglés">English</option>
             <option value="italiano">Italian</option>
             <option value="portugés">Portugues</option>
           </select>
-          <small id="emailHelp" class="form-text text-muted">The language you feel comfortable with.</small>
-
-          <label for="name">Nombre</label>
-          <input
-            v-on:keyup.enter="sendMessage"
-            v-model="name"
-            type="text"
-            name="name"
-            class="form-control"
-            placeholder="Name"
-            aria-label="Name"
-            aria-describedby="button-addon2">
-            <small id="emailHelp" class="form-text text-muted">Your name just for displaying it to you on the chat.</small>
+          <small id="emailHelp" class="form-text text-muted">Maybe your mother tongue.</small>
+          <br>
+          <label>Avatar</label>
+          <div class="d-flex">
+            <div class="p-2">
+              <img class="img-thumbnail"
+                src="2624869_avatar_bounty hunter_droid_space suit_icon.png"
+                @click="setAvatar('2624869_avatar_bounty hunter_droid_space suit_icon.png')">
+            </div>
+            <div class="p-2">
+              <img class="img-thumbnail"
+                src="2624871_jedi_jedi master_starwars_yoda_icon.png"
+                @click="setAvatar('2624871_jedi_jedi master_starwars_yoda_icon.png')">
+            </div>
+            <div class="p-2">
+              <img class="img-thumbnail"
+                src="2624874_chewbacca_han solo_starwars_wookie_icon.png"
+                @click="setAvatar('2624874_chewbacca_han solo_starwars_wookie_icon.png')">
+            </div>
+            <div class="p-2">
+              <img class="img-thumbnail"
+                src="2624876_droid_r2d2_robot_starwars_icon.png"
+                @click="setAvatar('2624876_droid_r2d2_robot_starwars_icon.png')">
+            </div>
+            <div class="p-2">
+              <img class="img-thumbnail"
+                src="2624878_frog_jabba the hutt_starwars_toad_icon.png"
+                @click="setAvatar('2624878_frog_jabba the hutt_starwars_toad_icon.png')">
+            </div>
+            <div class="p-2">
+              <img class="img-thumbnail"
+                src="2624882_bounty hunter_robot_spacecraft_starwars_icon.png"
+                @click="setAvatar('2624882_bounty hunter_robot_spacecraft_starwars_icon.png')">
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="wasist()">GoChat</button>
+          <button type="button" class="btn btn-primary" @click="startChatting()">GoChat</button>
         </div>
       </div>
     </div>
   </div>
   <div class="card chat-app h-100" v-if="openChat">
     <PeopleListContainer />
-    <Chat :name="name" :theLanguage="theLanguage" :yourLanguage="yourLanguage" />
+    <Chat :name="name" />
   </div>
 </template>
 <script>
 import PeopleListContainer from "./PeopleListContainer.vue";
 import Chat from "./Chat.vue";
+import { mapState, mapActions } from 'vuex';
 export default {
     data() {
         return {
             openChat: false,
-            theLanguage: "",
-            yourLanguage: "",
-            name: ""
+            language: "",
+            motherThonge: "",
+            name: "",
+            avatar: ""
         };
     },
     methods: {
-        wasist(){
-          this.openChat = !this.openChat
-        }
+      setAvatar(url){
+        this.avatar = url
+      },
+      startChatting(){
+        this.setTheLanguage(this.language);
+        this.setTheMotherThonge(this.motherThonge);
+        this.setTheAvatar(this.avatar);
+        this.openChat = !this.openChat
+      },
+      ...mapActions(['setTheLanguage']),
+      ...mapActions(['setTheMotherThonge']),
+      ...mapActions(['setTheAvatar'])
+    },
+    computed: {
+      ...mapState(['theLanguage']),
+      ...mapState(['theMotherThonge']),
+      ...mapState(['theAvatar'])
     },
     components: { PeopleListContainer, Chat }
 };

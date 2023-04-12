@@ -66,7 +66,7 @@ export default {
             this.askForAnswer()
         },
         askForAnswer() {
-            this.openaiMessages.push({ role: "user", content: this.message });
+            this.openaiMessages.push({ role: "user", content: this.message+'. Y contestame en '+this.theLanguage+'.' });
             this.openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
                 messages: this.openaiMessages

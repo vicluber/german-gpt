@@ -68,8 +68,6 @@ export default {
         }).then(res => {
             this.alternative = res.data.choices[0].message.content
         });
-
-
         this.openaiMessages.push({ role: "user", content: "Como se escribe esto de forma correcta?: " + this.message })
         this.openai.createChatCompletion({
             model: "gpt-3.5-turbo",
@@ -77,9 +75,6 @@ export default {
         }).then(res => {
             this.correction = res.data.choices[0].message.content
         });
-
-        
-
         if(this.role == 'assistant')
         this.openaiMessages.push({ role: "user", content: "Traduce esto a "+this.yourLanguage+": " + this.message })
         this.openai.createChatCompletion({
