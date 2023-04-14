@@ -1,22 +1,9 @@
 <template>
     <div class="chat h-100" style="display: flex; flex-direction: column;">
-        <div class="chat-header clearfix">
-            <div class="row">
-                <div class="col-lg-6">
-                <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                <img src="0.jpg" alt="avatar">
-                </a>
-                <div class="chat-about">
-                    <h6 class="m-b-0">{{ name }}</h6>
-                    <small>Last seen: now</small>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div class="chat-history" style="flex: 1;" @change="onChange()" ref="chatHistory">
+        <div class="chat-history" style="flex: 1;" ref="chatHistory">
             <ul class="m-b-0">
                 <ChatLoop
-                    :messages="this.messages" :theLanguage="theLanguage" :yourLanguage="yourLanguage"
+                    :messages="this.messages"
                 />
             </ul>
         </div>
@@ -40,12 +27,8 @@
 <script>
 import { Configuration, OpenAIApi } from "openai";
 import ChatLoop from "./ChatLoop.vue";
+import { mapState } from "vuex";
 export default {
-    props: {
-        theLanguage: String,
-        yourLanguage: String,
-        name: String
-    },
     data() {
         return {
             time: "",
@@ -76,6 +59,9 @@ export default {
                 this.messages.push({ role: "assistant", content: this.answer, time: this.time });
             });
         },
+    },
+    computed: {
+        ...mapState(['theLanguage'])
     },
     components: { ChatLoop }
 };

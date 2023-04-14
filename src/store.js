@@ -4,7 +4,8 @@ const store = createStore({
   state: {
     theLanguage: 'english',
     theMotherThonge: 'english',
-    theAvatar: ''
+    theAvatar: '',
+    theAvatarName: ''
   },
   mutations: {
     setTheLanguage(state, newValue) {
@@ -15,6 +16,9 @@ const store = createStore({
     },
     setTheAvatar(state, newValue) {
       state.theAvatar = newValue;
+    },
+    setTheAvatarName(state, newValue) {
+      state.theAvatarName = newValue;
     }
   },
   actions: {
@@ -26,6 +30,9 @@ const store = createStore({
     },
     setTheAvatar({ commit }, newValue) {
       commit('setTheAvatar', newValue);
+    },
+    setTheAvatarName({ commit }, newValue) {
+      commit('setTheAvatarName', newValue);
     }
   }
 });

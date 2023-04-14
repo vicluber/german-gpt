@@ -28,34 +28,35 @@
           <label>Avatar</label>
           <div class="d-flex">
             <div class="p-2">
-              <img class="img-thumbnail"
-                src="2624869_avatar_bounty hunter_droid_space suit_icon.png"
-                @click="setAvatar('2624869_avatar_bounty hunter_droid_space suit_icon.png')">
+              <button class="set-avatar-button" @click="setAvatar('clone.png', 'Clone')">
+                <img class="img-thumbnail"
+                  src="clone.png" />
+              </button>
             </div>
             <div class="p-2">
-              <img class="img-thumbnail"
-                src="2624871_jedi_jedi master_starwars_yoda_icon.png"
-                @click="setAvatar('2624871_jedi_jedi master_starwars_yoda_icon.png')">
+              <button class="set-avatar-button" @click="setAvatar('yoda.png', 'Yoda')">
+                <img class="img-thumbnail" src="yoda.png" />
+              </button>
             </div>
             <div class="p-2">
-              <img class="img-thumbnail"
-                src="2624874_chewbacca_han solo_starwars_wookie_icon.png"
-                @click="setAvatar('2624874_chewbacca_han solo_starwars_wookie_icon.png')">
+              <button class="set-avatar-button" @click="setAvatar('chewbacca.png', 'Chewbacca')">
+                <img class="img-thumbnail" src="chewbacca.png" />
+              </button>
             </div>
             <div class="p-2">
-              <img class="img-thumbnail"
-                src="2624876_droid_r2d2_robot_starwars_icon.png"
-                @click="setAvatar('2624876_droid_r2d2_robot_starwars_icon.png')">
+              <button class="set-avatar-button" @click="setAvatar('bb-8.png', 'BB-8')">
+                <img class="img-thumbnail" src="bb-8.png" />
+              </button>
             </div>
             <div class="p-2">
-              <img class="img-thumbnail"
-                src="2624878_frog_jabba the hutt_starwars_toad_icon.png"
-                @click="setAvatar('2624878_frog_jabba the hutt_starwars_toad_icon.png')">
+              <button class="set-avatar-button" @click="setAvatar('jabba.png', 'Jabba the Hutt')">
+                <img class="img-thumbnail" src="jabba.png" />
+              </button>
             </div>
             <div class="p-2">
-              <img class="img-thumbnail"
-                src="2624882_bounty hunter_robot_spacecraft_starwars_icon.png"
-                @click="setAvatar('2624882_bounty hunter_robot_spacecraft_starwars_icon.png')">
+              <button class="set-avatar-button" @click="setAvatar('clone-2.png', 'Clone')">
+                <img class="img-thumbnail" src="clone-2.png" >
+              </button>
             </div>
           </div>
         </div>
@@ -67,7 +68,7 @@
   </div>
   <div class="card chat-app h-100" v-if="openChat">
     <PeopleListContainer />
-    <Chat :name="name" />
+    <Chat />
   </div>
 </template>
 <script>
@@ -80,28 +81,32 @@ export default {
             openChat: false,
             language: "",
             motherThonge: "",
-            name: "",
-            avatar: ""
+            avatarName: "",
+            avatarImageUrl: ""
         };
     },
     methods: {
-      setAvatar(url){
-        this.avatar = url
+      setAvatar(avatarImageUrl, name){
+        this.avatarImageUrl = avatarImageUrl
+        this.avatarName = name
       },
       startChatting(){
         this.setTheLanguage(this.language);
         this.setTheMotherThonge(this.motherThonge);
-        this.setTheAvatar(this.avatar);
+        this.setTheAvatar(this.avatarImageUrl);
+        this.setTheAvatarName(this.avatarName);
         this.openChat = !this.openChat
       },
       ...mapActions(['setTheLanguage']),
       ...mapActions(['setTheMotherThonge']),
-      ...mapActions(['setTheAvatar'])
+      ...mapActions(['setTheAvatar']),
+      ...mapActions(['setTheAvatarName'])
     },
     computed: {
       ...mapState(['theLanguage']),
       ...mapState(['theMotherThonge']),
-      ...mapState(['theAvatar'])
+      ...mapState(['theAvatar']),
+      ...mapState(['theAvatarName'])
     },
     components: { PeopleListContainer, Chat }
 };

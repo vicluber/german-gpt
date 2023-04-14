@@ -2,7 +2,7 @@
     <div class="message-data" :class="{ 'text-right': role === 'assistant' }">
         <span class="message-data-time">{{ time }}, Today </span>
         <img v-if="role === 'assistant'" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/250px-ChatGPT_logo.svg.png" alt="avatar">
-        <img v-if="role === 'user'" src="0.jpg" alt="avatar">
+        <img v-if="role === 'user'" :src="theAvatar" alt="avatar">
     </div>
     <div class="d-flex float-left" v-if="role === 'user'">
         <div class="message my-message" v-if="!alternate && !correct">{{ message }}</div>
@@ -30,13 +30,12 @@
 
 <script>
 import { Configuration, OpenAIApi } from "openai";
+import { mapState } from 'vuex';
 export default {
     props: {
         message: String,
         role: String,
-        time: String,
-        yourLanguage: String,
-        theLanguage: String
+        time: String
     },
     data() {
         return {
@@ -76,7 +75,7 @@ export default {
             this.correction = res.data.choices[0].message.content
         });
         if(this.role == 'assistant')
-        this.openaiMessages.push({ role: "user", content: "Traduce esto a "+this.yourLanguage+": " + this.message })
+        this.openaiMessages.push({ role: "user", content: "Traduce esto a "+this.theMotherThonge+": " + this.message })
         this.openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: this.openaiMessages
@@ -87,7 +86,11 @@ export default {
     computed: {
         assistantMessage() {
             return this.translate ? this.translated : this.message
-        }
+        },
+        ...mapState(['theAvatar']),
+        ...mapState(['theAvatarName']),
+        ...mapState(['theLanguage']),
+        ...mapState(['theMotherThonge'])
     }
 };
 </script>

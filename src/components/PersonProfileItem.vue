@@ -7,22 +7,25 @@
         </div>
     </li>
     <li class="clearfix active">
-        <img src="0.jpg" alt="avatar">
+        <img :src="theAvatar" alt="avatar">
         <div class="about">
-        <div class="name">Victor Willhuber</div>
+        <div class="name">{{ theAvatarName }}</div>
         <div class="status"> <i class="fa fa-circle online"></i> online </div>
         </div>
     </li>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
     data() {
         return {
         
         };
     },
-    mounted() {
+    computed: {
+        ...mapState(['theAvatar']),
+        ...mapState(['theAvatarName'])
     },
     methods: {
         
