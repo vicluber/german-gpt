@@ -14,6 +14,7 @@
             <option value="portugés">Portugues</option>
           </select>
           <small id="emailHelp" class="form-text text-muted">Language be used.</small>
+          <span class="text-danger" v-if="errors.language">{{ errors.language }}</span>
           <br>
           <label for="language">I can easily speak:</label>
           <select class="form-control" v-model="motherThonge">
@@ -24,41 +25,61 @@
             <option value="portugés">Portugues</option>
           </select>
           <small id="emailHelp" class="form-text text-muted">Maybe your mother tongue.</small>
+          <span class="text-danger" v-if="errors.motherThonge">{{ errors.motherThonge }}</span>
           <br>
           <label>Avatar</label>
           <div class="d-flex">
             <div class="p-2">
-              <button class="set-avatar-button" @click="setAvatar('clone.png', 'Clone')">
+              <button
+                class="set-avatar-button"
+                :class="{ 'rounded border border-primary': avatarName === 'Clone' }"
+                @click="setAvatar('clone.png', 'Clone')">
                 <img class="img-thumbnail"
                   src="clone.png" />
               </button>
             </div>
             <div class="p-2">
-              <button class="set-avatar-button" @click="setAvatar('yoda.png', 'Yoda')">
+              <button
+                class="set-avatar-button"
+                :class="{ 'rounded border border-primary': avatarName === 'Yoda' }"
+                @click="setAvatar('yoda.png', 'Yoda')">
                 <img class="img-thumbnail" src="yoda.png" />
               </button>
             </div>
             <div class="p-2">
-              <button class="set-avatar-button" @click="setAvatar('chewbacca.png', 'Chewbacca')">
+              <button
+                class="set-avatar-button"
+                :class="{ 'rounded border border-primary': avatarName === 'Chewbacca' }"
+                @click="setAvatar('chewbacca.png', 'Chewbacca')">
                 <img class="img-thumbnail" src="chewbacca.png" />
               </button>
             </div>
             <div class="p-2">
-              <button class="set-avatar-button" @click="setAvatar('bb-8.png', 'BB-8')">
+              <button
+                class="set-avatar-button"
+                :class="{ 'rounded border border-primary': avatarName === 'bb-8' }"
+                @click="setAvatar('bb-8.png', 'BB-8')">
                 <img class="img-thumbnail" src="bb-8.png" />
               </button>
             </div>
             <div class="p-2">
-              <button class="set-avatar-button" @click="setAvatar('jabba.png', 'Jabba the Hutt')">
+              <button
+                class="set-avatar-button"
+                :class="{ 'rounded border border-primary': avatarName === 'Jabba the Hutt' }"
+                @click="setAvatar('jabba.png', 'Jabba the Hutt')">
                 <img class="img-thumbnail" src="jabba.png" />
               </button>
             </div>
             <div class="p-2">
-              <button class="set-avatar-button" @click="setAvatar('clone-2.png', 'Clone')">
+              <button
+                class="set-avatar-button"
+                :class="{ 'rounded border border-primary': avatarName === 'Clone-2' }"
+                @click="setAvatar('clone-2.png', 'Clone-2')">
                 <img class="img-thumbnail" src="clone-2.png" >
               </button>
             </div>
           </div>
+          <span class="text-danger" v-if="errors.avatarName">{{ errors.avatarName }}</span>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" @click="startChatting()">GoChat</button>
@@ -82,7 +103,8 @@ export default {
             language: "",
             motherThonge: "",
             avatarName: "",
-            avatarImageUrl: ""
+            avatarImageUrl: "",
+            errors: {}
         };
     },
     methods: {
@@ -90,12 +112,31 @@ export default {
         this.avatarImageUrl = avatarImageUrl
         this.avatarName = name
       },
+      validateForm() {
+        this.errors = {};
+
+        if (this.motherThonge == "") {
+          this.errors.motherThonge = 'Required field';
+        }
+
+        if (this.language == "") {
+          this.errors.language = 'Required field';
+        }
+
+        if (this.avatarName == "") {
+          this.errors.avatarName = 'Select an avatar';
+        }
+
+        return Object.keys(this.errors).length === 0;
+      },
       startChatting(){
-        this.setTheLanguage(this.language);
-        this.setTheMotherThonge(this.motherThonge);
-        this.setTheAvatar(this.avatarImageUrl);
-        this.setTheAvatarName(this.avatarName);
-        this.openChat = !this.openChat
+        if (this.validateForm()) {
+          this.setTheLanguage(this.language);
+          this.setTheMotherThonge(this.motherThonge);
+          this.setTheAvatar(this.avatarImageUrl);
+          this.setTheAvatarName(this.avatarName);
+          this.openChat = !this.openChat
+        }
       },
       ...mapActions(['setTheLanguage']),
       ...mapActions(['setTheMotherThonge']),

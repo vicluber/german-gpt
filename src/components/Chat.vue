@@ -1,6 +1,6 @@
 <template>
-    <div class="chat h-100" style="display: flex; flex-direction: column;">
-        <div class="chat-history" style="flex: 1;" ref="chatHistory">
+    <div class="chat" style="display: flex; flex-direction: column; height: 95%;">
+        <div class="chat-history" id="chat-history" style="flex: 1; overflow: auto;" ref="chatHistory">
             <ul class="m-b-0">
                 <ChatLoop
                     :messages="this.messages"
@@ -46,6 +46,8 @@ export default {
             this.message = this.inputMessage;
             this.inputMessage = "";
             this.messages.push({ role: "user", content: this.message, time: this.time });
+            let objDiv = document.getElementById("chat-history");
+            objDiv.scrollTop = objDiv.scrollHeight;
             this.askForAnswer()
         },
         askForAnswer() {
@@ -57,6 +59,8 @@ export default {
                 this.answer = res.data.choices[0].message.content;
                 this.openaiMessages.push({ role: "assistant", content: this.answer });
                 this.messages.push({ role: "assistant", content: this.answer, time: this.time });
+                let objDiv = document.getElementById("chat-history");
+                objDiv.scrollTop = objDiv.scrollHeight;
             });
         },
     },
